@@ -22,8 +22,8 @@ from typing_extensions import Self
 from io import BytesIO
 
 
-from vtkmodules.vtkCommonDataModel import vtkPolyData
-from vtkmodules.vtkFiltersCore import vtkTriangleFilter, vtkPolyDataNormals
+# from vtkmodules.vtkCommonDataModel import vtkPolyData
+# from vtkmodules.vtkFiltersCore import vtkTriangleFilter, vtkPolyDataNormals
 
 from .geom import Vector, VectorLike, BoundBox, Plane, Location, Matrix
 from .shape_protocols import geom_LUT_FACE, geom_LUT_EDGE, Shapes, Geoms
@@ -291,8 +291,8 @@ from OCP.GeomFill import (
 from OCP.BRepProj import BRepProj_Projection
 from OCP.BRepExtrema import BRepExtrema_DistShapeShape
 
-from OCP.IVtkOCC import IVtkOCC_Shape, IVtkOCC_ShapeMesher
-from OCP.IVtkVTK import IVtkVTK_ShapeData
+# from OCP.IVtkOCC import IVtkOCC_Shape, IVtkOCC_ShapeMesher
+# from OCP.IVtkVTK import IVtkVTK_ShapeData
 
 # for catching exceptions
 from OCP.Standard import Standard_NoSuchObject, Standard_Failure
@@ -1658,53 +1658,53 @@ class Shape(object):
 
         return self.__class__(bldr.Shape())
 
-    def toVtkPolyData(
-        self,
-        tolerance: Optional[float] = None,
-        angularTolerance: Optional[float] = None,
-        normals: bool = False,
-    ) -> vtkPolyData:
-        """
-        Convert shape to vtkPolyData
-        """
-
-        vtk_shape = IVtkOCC_Shape(self.wrapped)
-        shape_data = IVtkVTK_ShapeData()
-        shape_mesher = IVtkOCC_ShapeMesher()
-
-        drawer = vtk_shape.Attributes()
-        drawer.SetUIsoAspect(Prs3d_IsoAspect(Quantity_Color(), Aspect_TOL_SOLID, 1, 0))
-        drawer.SetVIsoAspect(Prs3d_IsoAspect(Quantity_Color(), Aspect_TOL_SOLID, 1, 0))
-
-        if tolerance:
-            drawer.SetDeviationCoefficient(tolerance)
-
-        if angularTolerance:
-            drawer.SetDeviationAngle(angularTolerance)
-
-        shape_mesher.Build(vtk_shape, shape_data)
-
-        rv = shape_data.getVtkPolyData()
-
-        # convert to triangles and split edges
-        t_filter = vtkTriangleFilter()
-        t_filter.SetInputData(rv)
-        t_filter.Update()
-
-        rv = t_filter.GetOutput()
-
-        # compute normals
-        if normals:
-            n_filter = vtkPolyDataNormals()
-            n_filter.SetComputePointNormals(True)
-            n_filter.SetComputeCellNormals(True)
-            n_filter.SetFeatureAngle(360)
-            n_filter.SetInputData(rv)
-            n_filter.Update()
-
-            rv = n_filter.GetOutput()
-
-        return rv
+    # def toVtkPolyData(
+    #     self,
+    #     tolerance: Optional[float] = None,
+    #     angularTolerance: Optional[float] = None,
+    #     normals: bool = False,
+    # ) -> vtkPolyData:
+    #     """
+    #     Convert shape to vtkPolyData
+    #     """
+    #
+    #     vtk_shape = IVtkOCC_Shape(self.wrapped)
+    #     shape_data = IVtkVTK_ShapeData()
+    #     shape_mesher = IVtkOCC_ShapeMesher()
+    #
+    #     drawer = vtk_shape.Attributes()
+    #     drawer.SetUIsoAspect(Prs3d_IsoAspect(Quantity_Color(), Aspect_TOL_SOLID, 1, 0))
+    #     drawer.SetVIsoAspect(Prs3d_IsoAspect(Quantity_Color(), Aspect_TOL_SOLID, 1, 0))
+    #
+    #     if tolerance:
+    #         drawer.SetDeviationCoefficient(tolerance)
+    #
+    #     if angularTolerance:
+    #         drawer.SetDeviationAngle(angularTolerance)
+    #
+    #     shape_mesher.Build(vtk_shape, shape_data)
+    #
+    #     rv = shape_data.getVtkPolyData()
+    #
+    #     # convert to triangles and split edges
+    #     t_filter = vtkTriangleFilter()
+    #     t_filter.SetInputData(rv)
+    #     t_filter.Update()
+    #
+    #     rv = t_filter.GetOutput()
+    #
+    #     # compute normals
+    #     if normals:
+    #         n_filter = vtkPolyDataNormals()
+    #         n_filter.SetComputePointNormals(True)
+    #         n_filter.SetComputeCellNormals(True)
+    #         n_filter.SetFeatureAngle(360)
+    #         n_filter.SetInputData(rv)
+    #         n_filter.Update()
+    #
+    #         rv = n_filter.GetOutput()
+    #
+    #     return rv
 
     def _repr_javascript_(self):
         """

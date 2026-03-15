@@ -30,8 +30,8 @@ from .occ_impl.solver import (
 from .occ_impl.exporters.assembly import (
     exportAssembly,
     exportCAF,
-    exportVTKJS,
-    exportVRML,
+    # exportVTKJS,
+    # exportVRML,
     exportGLTF,
     STEPExportModeLiterals,
 )

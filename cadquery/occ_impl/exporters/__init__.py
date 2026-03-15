@@ -15,7 +15,7 @@ from .json import JsonMesh
 from .amf import AmfWriter
 from .threemf import ThreeMFWriter
 from .dxf import exportDXF, DxfDocument
-from .vtk import exportVTP
+# from .vtk import exportVTP
 
 
 class ExportTypes:
@@ -123,8 +123,8 @@ def export(
         shape.mesh(tolerance, angularTolerance)
         VrmlAPI.Write_s(shape.wrapped, fname)
 
-    elif exportType == ExportTypes.VTP:
-        exportVTP(shape, fname, tolerance, angularTolerance)
+    # elif exportType == ExportTypes.VTP:
+    #     exportVTP(shape, fname, tolerance, angularTolerance)
 
     elif exportType == ExportTypes.BREP:
         shape.exportBrep(fname)

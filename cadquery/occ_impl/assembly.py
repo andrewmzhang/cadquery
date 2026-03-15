@@ -41,24 +41,24 @@ from OCP.BOPAlgo import BOPAlgo_GlueEnum, BOPAlgo_MakeConnected
 from OCP.TopoDS import TopoDS_Shape
 from OCP.gp import gp_EulerSequence
 
-from vtkmodules.vtkRenderingCore import (
-    vtkActor,
-    vtkPolyDataMapper as vtkMapper,
-    vtkRenderer,
-    vtkProp3D,
-)
+# from vtkmodules.vtkRenderingCore import (
+#     vtkActor,
+#     vtkPolyDataMapper as vtkMapper,
+#     vtkRenderer,
+#     vtkProp3D,
+# )
 
-from vtkmodules.vtkFiltersExtraction import vtkExtractCellsByType
-from vtkmodules.vtkCommonDataModel import (
-    VTK_TRIANGLE,
-    VTK_LINE,
-    VTK_VERTEX,
-    VTK_POLY_LINE,
-)
+# from vtkmodules.vtkFiltersExtraction import vtkExtractCellsByType
+# from vtkmodules.vtkCommonDataModel import (
+#     VTK_TRIANGLE,
+#     VTK_LINE,
+#     VTK_VERTEX,
+#     VTK_POLY_LINE,
+# )
 
 from .geom import Location
 from .shapes import Shape, Solid, Compound
-from .exporters.vtk import toString
+# from .exporters.vtk import toString
 from ..cq import Workplane
 from ..utils import BiDict
 
@@ -628,166 +628,166 @@ def _loc2vtk(
     return trans, (rot[1], rot[2], rot[0])
 
 
-def toVTKAssy(
-    assy: AssemblyProtocol,
-    color: Tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0),
-    edgecolor: Tuple[float, float, float, float] = (0.0, 0.0, 0.0, 0.0),
-    edges: bool = True,
-    linewidth: float = 2,
-    tolerance: float = 1e-3,
-    angularTolerance: float = 0.1,
-) -> List[vtkProp3D]:
+# def toVTKAssy(
+#     assy: AssemblyProtocol,
+#     color: Tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0),
+#     edgecolor: Tuple[float, float, float, float] = (0.0, 0.0, 0.0, 0.0),
+#     edges: bool = True,
+#     linewidth: float = 2,
+#     tolerance: float = 1e-3,
+#     angularTolerance: float = 0.1,
+# ) -> List[vtkProp3D]:
+#
+#     rv: List[vtkProp3D] = []
+#
+#     for shape, _, loc, col_ in assy:
+#
+#         col = col_.toTuple() if col_ else color
+#
+#         trans, rot = _loc2vtk(loc)
+#
+#         data = shape.toVtkPolyData(tolerance, angularTolerance)
+#
+#         # extract faces
+#         extr = vtkExtractCellsByType()
+#         extr.SetInputDataObject(data)
+#
+#         extr.AddCellType(VTK_LINE)
+#         extr.AddCellType(VTK_POLY_LINE)
+#         extr.AddCellType(VTK_VERTEX)
+#         extr.Update()
+#         data_edges = extr.GetOutput()
+#
+#         # extract edges
+#         extr = vtkExtractCellsByType()
+#         extr.SetInputDataObject(data)
+#
+#         extr.AddCellType(VTK_TRIANGLE)
+#         extr.Update()
+#         data_faces = extr.GetOutput()
+#
+#         # remove normals from edges
+#         data_edges.GetPointData().RemoveArray("Normals")
+#
+#         # add both to the vtkAssy
+#         mapper = vtkMapper()
+#         mapper.AddInputDataObject(data_faces)
+#
+#         actor = vtkActor()
+#         actor.SetMapper(mapper)
+#         actor.SetPosition(*trans)
+#         actor.SetOrientation(*rot)
+#         actor.GetProperty().SetColor(*col[:3])
+#         actor.GetProperty().SetOpacity(col[3])
+#
+#         rv.append(actor)
+#
+#         mapper = vtkMapper()
+#         mapper.AddInputDataObject(data_edges)
+#
+#         actor = vtkActor()
+#         actor.SetMapper(mapper)
+#         actor.SetPosition(*trans)
+#         actor.SetOrientation(*rot)
+#         actor.GetProperty().SetLineWidth(linewidth)
+#         actor.SetVisibility(edges)
+#         actor.GetProperty().SetColor(*edgecolor[:3])
+#
+#         rv.append(actor)
+#
+#     return rv
+#
+#
+# def toVTK(
+#     assy: AssemblyProtocol,
+#     color: Tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0),
+#     tolerance: float = 1e-3,
+#     angularTolerance: float = 0.1,
+# ) -> vtkRenderer:
+#
+#     renderer = vtkRenderer()
+#
+#     for shape, _, loc, col_ in assy:
+#
+#         col = col_.toTuple() if col_ else color
+#
+#         trans, rot = _loc2vtk(loc)
+#
+#         data = shape.toVtkPolyData(tolerance, angularTolerance)
+#
+#         # extract faces
+#         extr = vtkExtractCellsByType()
+#         extr.SetInputDataObject(data)
+#
+#         extr.AddCellType(VTK_LINE)
+#         extr.AddCellType(VTK_POLY_LINE)
+#         extr.AddCellType(VTK_VERTEX)
+#         extr.Update()
+#         data_edges = extr.GetOutput()
+#
+#         # extract edges
+#         extr = vtkExtractCellsByType()
+#         extr.SetInputDataObject(data)
+#
+#         extr.AddCellType(VTK_TRIANGLE)
+#         extr.Update()
+#         data_faces = extr.GetOutput()
+#
+#         # remove normals from edges
+#         data_edges.GetPointData().RemoveArray("Normals")
+#
+#         # add both to the renderer
+#         mapper = vtkMapper()
+#         mapper.AddInputDataObject(data_faces)
+#
+#         actor = vtkActor()
+#         actor.SetMapper(mapper)
+#         actor.SetPosition(*trans)
+#         actor.SetOrientation(*rot)
+#         actor.GetProperty().SetColor(*col[:3])
+#         actor.GetProperty().SetOpacity(col[3])
+#
+#         renderer.AddActor(actor)
+#
+#         mapper = vtkMapper()
+#         mapper.AddInputDataObject(data_edges)
+#
+#         actor = vtkActor()
+#         actor.SetMapper(mapper)
+#         actor.SetPosition(*trans)
+#         actor.SetOrientation(*rot)
+#
+#         renderer.AddActor(actor)
+#
+#     return renderer
 
-    rv: List[vtkProp3D] = []
 
-    for shape, _, loc, col_ in assy:
-
-        col = col_.toTuple() if col_ else color
-
-        trans, rot = _loc2vtk(loc)
-
-        data = shape.toVtkPolyData(tolerance, angularTolerance)
-
-        # extract faces
-        extr = vtkExtractCellsByType()
-        extr.SetInputDataObject(data)
-
-        extr.AddCellType(VTK_LINE)
-        extr.AddCellType(VTK_POLY_LINE)
-        extr.AddCellType(VTK_VERTEX)
-        extr.Update()
-        data_edges = extr.GetOutput()
-
-        # extract edges
-        extr = vtkExtractCellsByType()
-        extr.SetInputDataObject(data)
-
-        extr.AddCellType(VTK_TRIANGLE)
-        extr.Update()
-        data_faces = extr.GetOutput()
-
-        # remove normals from edges
-        data_edges.GetPointData().RemoveArray("Normals")
-
-        # add both to the vtkAssy
-        mapper = vtkMapper()
-        mapper.AddInputDataObject(data_faces)
-
-        actor = vtkActor()
-        actor.SetMapper(mapper)
-        actor.SetPosition(*trans)
-        actor.SetOrientation(*rot)
-        actor.GetProperty().SetColor(*col[:3])
-        actor.GetProperty().SetOpacity(col[3])
-
-        rv.append(actor)
-
-        mapper = vtkMapper()
-        mapper.AddInputDataObject(data_edges)
-
-        actor = vtkActor()
-        actor.SetMapper(mapper)
-        actor.SetPosition(*trans)
-        actor.SetOrientation(*rot)
-        actor.GetProperty().SetLineWidth(linewidth)
-        actor.SetVisibility(edges)
-        actor.GetProperty().SetColor(*edgecolor[:3])
-
-        rv.append(actor)
-
-    return rv
-
-
-def toVTK(
-    assy: AssemblyProtocol,
-    color: Tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0),
-    tolerance: float = 1e-3,
-    angularTolerance: float = 0.1,
-) -> vtkRenderer:
-
-    renderer = vtkRenderer()
-
-    for shape, _, loc, col_ in assy:
-
-        col = col_.toTuple() if col_ else color
-
-        trans, rot = _loc2vtk(loc)
-
-        data = shape.toVtkPolyData(tolerance, angularTolerance)
-
-        # extract faces
-        extr = vtkExtractCellsByType()
-        extr.SetInputDataObject(data)
-
-        extr.AddCellType(VTK_LINE)
-        extr.AddCellType(VTK_POLY_LINE)
-        extr.AddCellType(VTK_VERTEX)
-        extr.Update()
-        data_edges = extr.GetOutput()
-
-        # extract edges
-        extr = vtkExtractCellsByType()
-        extr.SetInputDataObject(data)
-
-        extr.AddCellType(VTK_TRIANGLE)
-        extr.Update()
-        data_faces = extr.GetOutput()
-
-        # remove normals from edges
-        data_edges.GetPointData().RemoveArray("Normals")
-
-        # add both to the renderer
-        mapper = vtkMapper()
-        mapper.AddInputDataObject(data_faces)
-
-        actor = vtkActor()
-        actor.SetMapper(mapper)
-        actor.SetPosition(*trans)
-        actor.SetOrientation(*rot)
-        actor.GetProperty().SetColor(*col[:3])
-        actor.GetProperty().SetOpacity(col[3])
-
-        renderer.AddActor(actor)
-
-        mapper = vtkMapper()
-        mapper.AddInputDataObject(data_edges)
-
-        actor = vtkActor()
-        actor.SetMapper(mapper)
-        actor.SetPosition(*trans)
-        actor.SetOrientation(*rot)
-
-        renderer.AddActor(actor)
-
-    return renderer
-
-
-def toJSON(
-    assy: AssemblyProtocol,
-    color: Tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0),
-    tolerance: float = 1e-3,
-) -> List[Dict[str, Any]]:
-    """
-    Export an object to a structure suitable for converting to VTK.js JSON.
-    """
-
-    rv = []
-
-    for shape, _, loc, col_ in assy:
-
-        val: Any = {}
-
-        data = toString(shape, tolerance)
-        trans, rot = loc.toTuple()
-
-        val["shape"] = data
-        val["color"] = col_.toTuple() if col_ else color
-        val["position"] = trans
-        val["orientation"] = tuple(radians(r) for r in rot)
-
-        rv.append(val)
-
-    return rv
+# def toJSON(
+#     assy: AssemblyProtocol,
+#     color: Tuple[float, float, float, float] = (1.0, 1.0, 1.0, 1.0),
+#     tolerance: float = 1e-3,
+# ) -> List[Dict[str, Any]]:
+#     """
+#     Export an object to a structure suitable for converting to VTK.js JSON.
+#     """
+#
+#     rv = []
+#
+#     for shape, _, loc, col_ in assy:
+#
+#         val: Any = {}
+#
+#         data = toString(shape, tolerance)
+#         trans, rot = loc.toTuple()
+#
+#         val["shape"] = data
+#         val["color"] = col_.toTuple() if col_ else color
+#         val["position"] = trans
+#         val["orientation"] = tuple(radians(r) for r in rot)
+#
+#         rv.append(val)
+#
+#     return rv
 
 
 def toFusedCAF(

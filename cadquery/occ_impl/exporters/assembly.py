@@ -6,8 +6,8 @@ from shutil import make_archive
 from typing import Optional
 from typing_extensions import Literal
 
-from vtkmodules.vtkIOExport import vtkJSONSceneExporter, vtkVRMLExporter
-from vtkmodules.vtkRenderingCore import vtkRenderWindow
+# from vtkmodules.vtkIOExport import vtkJSONSceneExporter, vtkVRMLExporter
+# from vtkmodules.vtkRenderingCore import vtkRenderWindow
 
 from OCP.XSControl import XSControl_WorkSession
 from OCP.STEPCAFControl import STEPCAFControl_Writer
@@ -45,7 +45,7 @@ from OCP.TColStd import TColStd_IndexedDataMapOfStringString
 from OCP.Message import Message_ProgressRange
 from OCP.Interface import Interface_Static
 
-from ..assembly import AssemblyProtocol, toCAF, toVTK, toFusedCAF
+from ..assembly import AssemblyProtocol, toCAF, toFusedCAF
 from ..geom import Location
 from ..shapes import Shape, Compound
 
@@ -363,53 +363,53 @@ def exportCAF(assy: AssemblyProtocol, path: str, binary: bool = False) -> bool:
     return status == PCDM_StoreStatus.PCDM_SS_OK
 
 
-def _vtkRenderWindow(
-    assy: AssemblyProtocol, tolerance: float = 1e-3, angularTolerance: float = 0.1
-) -> vtkRenderWindow:
-    """
-    Convert an assembly to a vtkRenderWindow. Used by vtk based exporters.
-    """
-
-    renderer = toVTK(assy, tolerance=tolerance, angularTolerance=angularTolerance)
-    renderWindow = vtkRenderWindow()
-    renderWindow.AddRenderer(renderer)
-
-    renderer.ResetCamera()
-    renderer.SetBackground(1, 1, 1)
-
-    return renderWindow
-
-
-def exportVTKJS(assy: AssemblyProtocol, path: str):
-    """
-    Export an assembly to a zipped vtkjs. NB: .zip extensions is added to path.
-    """
-
-    renderWindow = _vtkRenderWindow(assy)
-
-    with TemporaryDirectory() as tmpdir:
-
-        exporter = vtkJSONSceneExporter()
-        exporter.SetFileName(tmpdir)
-        exporter.SetRenderWindow(renderWindow)
-        exporter.Write()
-        make_archive(path, "zip", tmpdir)
+# def _vtkRenderWindow(
+#     assy: AssemblyProtocol, tolerance: float = 1e-3, angularTolerance: float = 0.1
+# ) -> vtkRenderWindow:
+#     """
+#     Convert an assembly to a vtkRenderWindow. Used by vtk based exporters.
+#     """
+#
+#     renderer = toVTK(assy, tolerance=tolerance, angularTolerance=angularTolerance)
+#     renderWindow = vtkRenderWindow()
+#     renderWindow.AddRenderer(renderer)
+#
+#     renderer.ResetCamera()
+#     renderer.SetBackground(1, 1, 1)
+#
+#     return renderWindow
 
 
-def exportVRML(
-    assy: AssemblyProtocol,
-    path: str,
-    tolerance: float = 1e-3,
-    angularTolerance: float = 0.1,
-):
-    """
-    Export an assembly to a vrml file using vtk.
-    """
+# def exportVTKJS(assy: AssemblyProtocol, path: str):
+#     """
+#     Export an assembly to a zipped vtkjs. NB: .zip extensions is added to path.
+#     """
+#
+#     renderWindow = _vtkRenderWindow(assy)
+#
+#     with TemporaryDirectory() as tmpdir:
+#
+#         exporter = vtkJSONSceneExporter()
+#         exporter.SetFileName(tmpdir)
+#         exporter.SetRenderWindow(renderWindow)
+#         exporter.Write()
+#         make_archive(path, "zip", tmpdir)
 
-    exporter = vtkVRMLExporter()
-    exporter.SetFileName(path)
-    exporter.SetRenderWindow(_vtkRenderWindow(assy, tolerance, angularTolerance))
-    exporter.Write()
+
+# def exportVRML(
+#     assy: AssemblyProtocol,
+#     path: str,
+#     tolerance: float = 1e-3,
+#     angularTolerance: float = 0.1,
+# ):
+#     """
+#     Export an assembly to a vrml file using vtk.
+#     """
+#
+#     exporter = vtkVRMLExporter()
+#     exporter.SetFileName(path)
+#     exporter.SetRenderWindow(_vtkRenderWindow(assy, tolerance, angularTolerance))
+#     exporter.Write()
 
 
 def exportGLTF(
